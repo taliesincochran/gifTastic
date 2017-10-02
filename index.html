@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GifTastic</title>
+</head>
+
+<div id= "formArea">
+<input type="text" id="userRequest">
+<input type="submit" id='submitButton'>
+</div>
+<div id ="buttonArea">
+</div>
+<div id ="gifArea">
+</div>
+
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.js" 
+	integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  	crossorigin="anonymous"></script>
+<script type="text/javascript">
+	var contentArray = ["Game of Thrones","The Walking Dead","Sherlock","House","The Simpsons","American Dad","Adventure Time","Daredevil","Jessica Jones","Luke Cage", "Twin Peaks"];
+	var i = 0;
+	var callButtons = function() {
+		for (i = 0; i < contentArray.length; i++) {
+			console.log(contentArray[i]);
+			newButton = $("<button>");
+			newButton.attr("data-show", contentArray[i])
+			.addClass("btn")
+			.html(contentArray[i])
+			.appendTo("#buttonArea");
+		}
+		callGif();
+	}
+	var callGif = function() {
+		$(".btn").on("click",function(){
+		$("#gifArea").empty();
+		console.log(this);
+		var contentSelected = $(this).attr("data-show");
+		var queryURL =  "https://api.giphy.com/v1/gifs/search?q=" + contentSelected +"&api_key=vM9vIaMqN7X9I2ar4hHiG2SD8bYv5Zgm&limit=10&rating=pg";
+		$.ajax({
+			url: queryURL,
+			method: "GET"
+			}).done(function(response) {
+			$("#gifArea").empty();
+			console.log(response);			
+			for (var j = 0; j < 10; j++) {
+				newGif = $("<img class='gif'>");
+				newGif.attr("src", response.data[j].images.fixed_height_still.url)
+				.attr("id", "gifImg" + j)
+				.attr("data-state", "still")
+				.attr("data-still", response.data[j].images.fixed_height_still.url)
+				.attr("data-animate", response.data[j].images.fixed_height.url)
+				.attr("alt", contentArray[i])
+				.appendTo("#gifArea");
+				}
+				toggleAnimate();
+			})			
+		})
+	}	
+	var toggleAnimate = function() {
+		$(".gif").on("click",function () {
+			console.log($(this));
+			var state = $(this).attr("data-state");
+			if (state === "still") {
+				$(this).attr("data-state", "animate")
+				.attr("src", $(this).attr("data-animate"));
+			} else {
+				$(this).attr("data-state", "still")
+				.attr("src", $(this).attr("data-still"));
+			}
+		})
+	}
+	var submitEvent = function() {
+		$('#submitButton').on("click", function(event) {
+		// event.preventDefault;
+			var makeButton = $("#userRequest").val().trim();
+			if (!contentArray.includes(makeButton)) {
+				$("#buttonArea").empty();
+				contentArray.push(makeButton);
+				callButtons();
+				callGif();
+			}
+		})
+	}
+	$("document").ready(function() {
+		callButtons();
+		submitEvent();
+
+	})
+</script>
+</body>
+</html>
