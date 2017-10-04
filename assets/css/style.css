@@ -1,0 +1,29 @@
+body {
+	margin: auto 0;
+	background-color: black;
+}
+.pageHeader {
+	margin-left: 12px;
+}
+.gif {
+	display: block;	
+	margin: auto;
+	margin-top: 20px;
+}
+
+#userRequest,
+.btn {
+	width: 100%;
+	margin-top: 20px;
+}
+.submitBtn {
+	margin-top: 10px;
+	width: 33%;
+}
+.btn,
+.submitBtn {
+	overflow-wrap: break-word;
+}
+#main {
+	margin-top: 5%;
+}
